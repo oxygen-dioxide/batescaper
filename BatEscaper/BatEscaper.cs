@@ -55,9 +55,9 @@ namespace BatEscaper
                         remaining = etor.MoveNext();
                     }
                     if(c=="\"" || !remaining){
-                        result.Append(new String('\\', backslashCount));
-                    }else{
                         result.Append(new String('\\', backslashCount) + new String('\\', backslashCount));
+                    }else{
+                        result.Append(new String('\\', backslashCount));
                     }
                     if(!remaining){
                         break;
