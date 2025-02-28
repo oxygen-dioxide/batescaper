@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
 using System.Text;
 
 
@@ -35,17 +36,37 @@ namespace BatEscaper
             return EscapeCmd(text, true);
         }
 
-        static string[] BackSlashEscapes = { "\\", "\"",};
 
         static string EscapeCmd(string text, bool isScript){
             var result = new StringBuilder();
             var etor = StringInfo.GetTextElementEnumerator(text);
             while(etor.MoveNext()){
                 string c = etor.GetTextElement();
+                if(c=="\\") {
+                    int backslashCount = 1;
+                    bool remaining = etor.MoveNext();
+                    while(remaining){
+                        c = etor.GetTextElement();
+                        if(c == "\\"){
+                            ++backslashCount;
+                        }else{
+                            break;
+                        }
+                        remaining = etor.MoveNext();
+                    }
+                    if(c=="\"" || !remaining){
+                        result.Append(new String('\\', backslashCount));
+                    }else{
+                        result.Append(new String('\\', backslashCount) + new String('\\', backslashCount));
+                    }
+                    if(!remaining){
+                        break;
+                    }
+                }
                 if(isScript && c=="%"){
                     result.Append("%%");
-                } else if(BackSlashEscapes.Contains(c)){
-                    result.Append("\\"+c);
+                } else if(c=="\""){
+                    result.Append("\"\"");
                 } else {
                     result.Append(c);
                 }
