@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+    inputs: {}
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os.runs-on }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: 
+          - runs-on: windows-latest
+            arch: win-x64
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: test
+      run: dotnet test BatEscaper.Test
