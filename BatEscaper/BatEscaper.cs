@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 
@@ -33,6 +35,8 @@ namespace BatEscaper
             return EscapeCmd(text, true);
         }
 
+        static string[] BackSlashEscapes = { "\\", "\"",};
+
         static string EscapeCmd(string text, bool isScript){
             var result = new StringBuilder();
             var etor = StringInfo.GetTextElementEnumerator(text);
@@ -40,8 +44,8 @@ namespace BatEscaper
                 string c = etor.GetTextElement();
                 if(isScript && c=="%"){
                     result.Append("%%");
-                } else if(c == "\""){
-                    result.Append("\"\"");
+                } else if(BackSlashEscapes.Contains(c)){
+                    result.Append("\\"+c);
                 } else {
                     result.Append(c);
                 }

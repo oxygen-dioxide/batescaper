@@ -77,5 +77,8 @@ public class Tests
         }
     }
 
-    
+    [Fact]
+    public void TestCommandInjection(){
+        TestStr("\"&calc.exe&\"");
+    }
 }
